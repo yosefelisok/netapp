@@ -105,16 +105,6 @@ resource "aws_instance" "single_ec2" {
   key_name      = var.key_name
   ami           = var.ami
   instance_type = "t3.xlarge"
-
- # vpc_security_group_ids = [
-  #  aws_security_group.ssh.id
-  #]
-  #subnet_id = module.vpc.public_subnets[0]
-
-  #root_block_device {
-   # volume_size    = 8
-    #volume_type    = "gp2"
-
   user_data = <<-EOF
 		 #! /bin/bash
               #------------Set up the repository to Install Docker Engine---------
