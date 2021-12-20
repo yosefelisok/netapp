@@ -99,7 +99,7 @@ resource "aws_security_group" "ssh" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
+ 
 resource "aws_instance" "single_ec2" {
   depends_on    = [ module.vpc ]
   key_name      = var.key_name
