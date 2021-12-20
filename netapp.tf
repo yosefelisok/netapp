@@ -135,14 +135,15 @@ resource "aws_instance" "single_ec2" {
               sudo docker pull digitalocean/flask-helloworld
               sudo docker pull postgres
 
-              #------Run containers, ngninx is a reverse proxy for API to port 80=>5000------
+              #------Run containers------------------
               sudo docker run --name nginx -d -p 80:80 nginx
               sudo docker run -d digitalocean/flask-helloworld
               sudo docker volume create pgdata
               sudo docker run -it --rm -v pgdata:/var/lib/postgresql/data -e POSTGRES_PASSWORD=mysecretpassword postgres
 
               #-----------Secure that services will be running after reset-----------------
-              sudo docker start nginx
+              sudo systemctl enable docker
+	      sudo docker start nginx
               sudo docker start digitalocean/flask-helloworld
               sudo docker start postgres
 
@@ -151,8 +152,10 @@ resource "aws_instance" "single_ec2" {
               docker exec -ti nginx /bin/bash
               apt update
               apt install nano
-              nano /etc/nginx/conf.d/default.conf
-              #insert   string  proxy_pass http://localhost:5000 in location function
+              nano /etc/nginx/conf.d/default.conf/app.conf
+              #insert   data from file app.conf
+	      exit		
+
 
               #-------------Mount the EBS volume-----------------
               sudo apt update -y
