@@ -106,10 +106,10 @@ resource "aws_instance" "single_ec2" {
   ami           = var.ami
   instance_type = "t3.xlarge"
   user_data = <<-EOF
-		 #! /bin/bash
+              #! /bin/bash
 
-	            #------------Allow SSH inbound connection just for 10.0.0.3---------
-	            sudo iptables -A INPUT -p tcp -s 10.0.0.3 --dport 22 -j ACCEPT
+	      #------------Allow SSH inbound connection just for 10.0.0.3---------
+	      sudo iptables -A INPUT -p tcp -s 10.0.0.3 --dport 22 -j ACCEPT
 
               #------------Set up the repository to Install Docker Engine---------
               sudo apt-get update
@@ -139,20 +139,20 @@ resource "aws_instance" "single_ec2" {
               sudo docker run --name nginx -d -p 80:80 nginx
               sudo docker run -d digitalocean/flask-helloworld
               sudo docker volume create pgdata
-		          sudo docker run -it --rm -v pgdata:/var/lib/postgresql/data -e POSTGRES_PASSWORD=mysecretpassword postgres
+              sudo docker run -it --rm -v pgdata:/var/lib/postgresql/data -e POSTGRES_PASSWORD=mysecretpassword postgres
 
-		          #-----------Secure that services will be running after reset-----------------
-		          sudo docker start nginx
-		          sudo docker start digitalocean/flask-helloworld
-		          sudo docker start postgres
+              #-----------Secure that services will be running after reset-----------------
+              sudo docker start nginx
+              sudo docker start digitalocean/flask-helloworld
+              sudo docker start postgres
 
-		          #------------NGINX reserve  proxy cofiguration-----------------
+              #------------NGINX reserve  proxy cofiguration-----------------
 
-		          docker exec -ti nginx /bin/bash
-		          apt update
-		          apt install nano
-		          nano /etc/nginx/conf.d/default.conf
-		          #insert   string  proxy_pass http://localhost:5000 in location function
+              docker exec -ti nginx /bin/bash
+              apt update
+              apt install nano
+              nano /etc/nginx/conf.d/default.conf
+              #insert   string  proxy_pass http://localhost:5000 in location function
 
               #-------------Mount the EBS volume-----------------
               sudo apt update -y
