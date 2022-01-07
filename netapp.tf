@@ -106,56 +106,7 @@ resource "aws_instance" "single_ec2" {
   ami           = var.ami
   instance_type = "t3.xlarge"
   user_data = <<-EOF
-              #! /bin/bash
-
-	      #------------Allow SSH inbound connection just for 10.0.0.3---------
-	      sudo iptables -A INPUT -p tcp -s 10.0.0.3 --dport 22 -j ACCEPT
-
-              #------------Set up the repository to Install Docker Engine---------
-              sudo apt-get update
-              sudo apt-get install \
-              ca-certificates \
-              curl \
-              gnupg \
-              lsb-release
-
-              #---- Add Docker’s official GPG key:----------------------
-              curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-              echo \
-              "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-              $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-              #------------Install Docker Engine---------
-              sudo apt-get update
-              sudo apt-get install docker-ce docker-ce-cli containerd.io
-              sudo systemctl start docker
-
-              #-----------Install images to Docker-----------
-              sudo docker pull nginx
-              sudo docker pull digitalocean/flask-helloworld
-              sudo docker pull postgres
-
-              #------Run containers------------------
-              sudo docker run --name nginx -d -p 80:80 nginx
-              sudo docker run -d digitalocean/flask-helloworld
-              sudo docker volume create pgdata
-              sudo docker run -it --rm -v pgdata:/var/lib/postgresql/data -e POSTGRES_PASSWORD=mysecretpassword postgres
-
-              #-----------Secure that services will be running after reset-----------------
-              sudo systemctl enable docker
-	      sudo docker start nginx
-              sudo docker start digitalocean/flask-helloworld
-              sudo docker start postgres
-
-              #------------NGINX reserve  proxy cofiguration-----------------
-
-              docker exec -ti nginx /bin/bash
-              apt update
-              apt install nano
-              nano /etc/nginx/conf.d/default.conf/app.conf
-              #insert   data from file app.conf
-	      exit		
-
+              #! /bin/bash     
 
               #-------------Mount the EBS volume-----------------
               sudo apt update -y
